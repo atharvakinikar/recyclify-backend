@@ -15,7 +15,9 @@ app.use(
 app.use("/api", Router);
 
 let port = process.env.PORT || 4000;
-
+if (port == null || port == "") {
+  port = 8000;
+}
 app.listen(port, function () {
   console.log("Server is up and running at port:", port);
 });
