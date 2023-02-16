@@ -7,7 +7,7 @@ const JWT = require("jsonwebtoken");
 async function generateToken(user) {
   const token = await JWT.sign(
     {
-      id: user._id,
+      id: user.email,
     },
     process.env.Secret,
     {

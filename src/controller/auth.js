@@ -10,7 +10,7 @@ async function register(req, res) {
   // checking if user already exists
   if (record.isUser) {
     try {
-      const userExist = await User.exists({ email: record.email });
+      const userExist = await User.findOne({ email: record.email }).lean();
       if (userExist) {
         return res.status(400).send({ msg: "user already regisered" });
       }
@@ -32,7 +32,9 @@ async function register(req, res) {
     }
   } else {
     try {
-      const collectorExist = await Collector.exists({ email: record.email });
+      const collectorExist = await Collector.findOne({
+        email: record.email,
+      }).lean();
       if (collectorExist) {
         return res.status(400).send({ msg: "collector already regisered" });
       }
@@ -87,9 +89,9 @@ async function login(req, res) {
       return res.status(400).json({ msg: "Invalid Credentials" });
     }
 
-    const token = await generateToken(userExist);
+    const token = await generateToken(collectorExist);
     return res.status(400).json({
-      ...userExist,
+      ...collectorExist,
       token,
     });
   }
