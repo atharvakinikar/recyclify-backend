@@ -21,6 +21,7 @@ async function register(req, res) {
         email: record.email,
         password: hashedPassword,
         phone: record.phone,
+        city: record.city,
       });
 
       const Token = await generateToken(response);
