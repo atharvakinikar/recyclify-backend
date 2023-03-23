@@ -25,6 +25,7 @@ async function register(req, res) {
       });
 
       const Token = await generateToken(response);
+      console.log("token generated successfully");
       res.status(400).json({
         Token,
       });
