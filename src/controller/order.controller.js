@@ -1,10 +1,10 @@
 const User = require("../models/user.model");
 const Order = require("../models/order.model");
 const Collector = require("../models/collector.model");
+const { fileToBase64 } = require("../utils/fileToBase64");
 
 async function getAllOrders(req, res) {
   const user = req.body;
-  console.log(user.userID);
   try {
     const userOrders = await Order.find({ userId: user.userID });
     return res.status(200).send(userOrders);
@@ -14,22 +14,19 @@ async function getAllOrders(req, res) {
 }
 
 async function placeOrder(req, res) {
-  const order = req.body;
   try {
+    const order = JSON.parse(req.body.body)
     const response = await Order.create({
       userId: order.userID,
       productType: order.productType,
       items: order.items,
       quantity: order.quantity,
-      address: {
-        houseNo: order.address.houseNo,
-        lane: order.address.lane,
-        city: order.address.city,
-        pincode: order.address.pincode,
-        date: new Date().toISOString().split("T")[0],
-      },
-    });
-    return res.status(200).send(response);
+      product_image: fileToBase64(req.file),
+      address: order.address,
+      city: order.city,
+      phone: order.phone,
+    })
+    return res.status(201).send(response);
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -39,9 +36,7 @@ async function orderBycity(req, res) {
   const collector = req.body;
   try {
     const collectorcity = await Collector.findOne({ _id: collector.id });
-    const orderBycity = await Order.find({
-      "address.$.city": collectorcity.city,
-    });
+    const orderBycity = await Order.find({ city: collectorcity.city });
     return res.status(200).send(orderBycity);
   } catch (error) {
     return res.status(400).send(error.message);
@@ -49,11 +44,9 @@ async function orderBycity(req, res) {
 }
 
 async function completedorders(req, res) {
-  const { userId } = req.body;
   try {
-    const completedorders = await Order.find({
-      $and: [{ userId: userId }, { completed: true }],
-    }).lean();
+    const { id } = req.body;
+    const completedorders = await Order.find({ userId: id, completed: true })
     return res.status(200).send(completedorders);
   } catch (error) {
     return res.status(400).send(error.message);
@@ -61,24 +54,10 @@ async function completedorders(req, res) {
 }
 
 async function incompletedorders(req, res) {
-  const { userId } = req.body;
   try {
-    const incompletedorders = await Order.find({
-      $and: [{ userId: userId }, { completed: false }],
-    }).lean();
+    const { id } = req.body;
+    const incompletedorders = await Order.find({ userId: id, completed: false })
     return res.status(200).send(incompletedorders);
-  } catch (error) {
-    return res.status(400).send(error.message);
-  }
-}
-
-async function completedorders(req, res) {
-  const { userId } = req.body;
-  try {
-    const completedorders = await Order.find({
-      $and: [{ userId: userId }, { completed: true }],
-    }).lean();
-    return res.status(200).send(completedorders);
   } catch (error) {
     return res.status(400).send(error.message);
   }
