@@ -28,6 +28,7 @@ async function register(req, res) {
       console.log("token generated successfully");
       res.status(201).json({
         Token,
+        userType: "user",
       });
     } catch (error) {
       res.status(400).send(error.message);
@@ -55,6 +56,7 @@ async function register(req, res) {
       const Token = await generateToken(response);
       return res.status(201).json({
         Token,
+        userType: "collector",
       });
     } catch (error) {}
   }
@@ -79,6 +81,7 @@ async function login(req, res) {
     const token = await generateToken(userExist);
     return res.status(200).json({
       ...userExist,
+      userType: "user",
       token,
     });
   } else {
@@ -94,6 +97,7 @@ async function login(req, res) {
     const token = await generateToken(collectorExist);
     return res.status(200).json({
       ...collectorExist,
+      userType: "collector",
       token,
     });
   }
