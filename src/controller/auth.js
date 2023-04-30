@@ -26,7 +26,7 @@ async function register(req, res) {
 
       const Token = await generateToken(response);
       console.log("token generated successfully");
-      res.status(400).json({
+      res.status(201).json({
         Token,
       });
     } catch (error) {
@@ -53,7 +53,7 @@ async function register(req, res) {
         city: record.city,
       });
       const Token = await generateToken(response);
-      return res.status(400).json({
+      return res.status(201).json({
         Token,
       });
     } catch (error) {}
@@ -77,7 +77,7 @@ async function login(req, res) {
     }
 
     const token = await generateToken(userExist);
-    return res.status(400).json({
+    return res.status(200).json({
       ...userExist,
       token,
     });
@@ -92,7 +92,7 @@ async function login(req, res) {
     }
 
     const token = await generateToken(collectorExist);
-    return res.status(400).json({
+    return res.status(200).json({
       ...collectorExist,
       token,
     });
@@ -107,9 +107,9 @@ async function getProfile(req, res) {
     return res.status(404).send("User not found");
   }
   if (profileUser) {
-    return res.status(400).send(profileUser);
+    return res.status(200).send(profileUser);
   }
-  return res.status(400).send(profileCollector);
+  return res.status(200).send(profileCollector);
 }
 
 async function editProfile(req, res) {
