@@ -3,6 +3,7 @@ const {
   placeOrder,
   orderBycity,
   completedorders,
+  incompletedorders,
   orderCompleted,
 } = require("../controller/order.controller");
 
