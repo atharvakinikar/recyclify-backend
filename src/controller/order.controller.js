@@ -36,7 +36,7 @@ async function orderBycity(req, res) {
   const collector = req.body;
   try {
     const collectorcity = await Collector.findOne({ _id: collector.id });
-    const orderBycity = await Order.find({ city: collectorcity.city });
+    const orderBycity = await Order.find({ city: collectorcity.city, completed: false });
     return res.status(200).send(orderBycity);
   } catch (error) {
     return res.status(400).send(error.message);
