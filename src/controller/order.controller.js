@@ -60,6 +60,30 @@ async function completedorders(req, res) {
   }
 }
 
+async function incompletedorders(req, res) {
+  const { userId } = req.body;
+  try {
+    const incompletedorders = await Order.find({
+      $and: [{ userId: userId }, { completed: false }],
+    }).lean();
+    return res.status(200).send(incompletedorders);
+  } catch (error) {
+    return res.status(400).send(error.message);
+  }
+}
+
+async function completedorders(req, res) {
+  const { userId } = req.body;
+  try {
+    const completedorders = await Order.find({
+      $and: [{ userId: userId }, { completed: true }],
+    }).lean();
+    return res.status(200).send(completedorders);
+  } catch (error) {
+    return res.status(400).send(error.message);
+  }
+}
+
 async function orderCompleted(req, res) {
   const order = req.body;
 
@@ -79,5 +103,6 @@ module.exports = {
   placeOrder,
   orderBycity,
   completedorders,
+  incompletedorders,
   orderCompleted,
 };
